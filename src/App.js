@@ -14,7 +14,6 @@ import Dashboard from './pages/dashboard/Dashboard';
 import OrderDashboard from './pages/orders/OrderDashboard';
 import InventoryDashboard from './pages/inventory/InventoryDashboard';
 import TrackingDashboard from './pages/tracking/TrackingDashboard';
-import ReportsDashboard from './pages/reports/ReportsDashboard';
 import UserManagement from './pages/users/UserManagement';
 import Profile from './pages/users/Profile';
 import Settings from './pages/users/Settings';
@@ -43,7 +42,6 @@ function App() {
                     <Route path="/orders" element={<OrderDashboard />} />
                     <Route path="/inventory" element={<InventoryDashboard />} />
                     <Route path="/tracking" element={<TrackingDashboard />} />
-                    <Route path="/reports" element={<ReportsDashboard />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/settings" element={<Settings />} />
                     <Route

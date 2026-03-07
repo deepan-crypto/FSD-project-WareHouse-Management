@@ -5,7 +5,6 @@ import {
     Package,
     Boxes,
     MapPin,
-    BarChart3,
     Users,
     Menu,
     X
@@ -22,7 +21,6 @@ const Sidebar = () => {
         { path: '/orders', icon: Package, label: 'Orders' },
         { path: '/inventory', icon: Boxes, label: 'Inventory' },
         { path: '/tracking', icon: MapPin, label: 'Tracking' },
-        { path: '/reports', icon: BarChart3, label: 'Reports' },
     ];
 
     if (isAdmin()) {

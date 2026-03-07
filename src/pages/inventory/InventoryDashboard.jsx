@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Package, TrendingDown, AlertCircle } from 'lucide-react';
+import { Package, TrendingDown, AlertCircle, Plus, X } from 'lucide-react';
 import Card from '../../components/common/Card';
 import Badge from '../../components/common/Badge';
 import Button from '../../components/common/Button';
+import Input from '../../components/common/Input';
+import Modal from '../../components/common/Modal';
 import { ToastContainer } from '../../components/common/Toast';
 import '../orders/OrderDashboard.css';
 
@@ -17,6 +19,12 @@ const InventoryDashboard = () => {
     const [syncing, setSyncing] = useState(false);
     const [lastSyncedAt, setLastSyncedAt] = useState(null);
     const [toasts, setToasts] = useState([]);
+    const [showAddIncoming, setShowAddIncoming] = useState(false);
+    const [incomingForm, setIncomingForm] = useState({
+        sku: '',
+        quantity: ''
+    });
+    const [incomingError, setIncomingError] = useState('');
 
     const addToast = (message, type = 'info') => {
         const id = Date.now() + Math.random();
@@ -46,6 +54,37 @@ const InventoryDashboard = () => {
         }, 800);
     };
 
+    const handleAddIncoming = () => {
+        setIncomingError('');
+        
+        if (!incomingForm.sku.trim()) {
+            setIncomingError('Please select a product');
+            return;
+        }
+        
+        if (!incomingForm.quantity || parseInt(incomingForm.quantity) <= 0) {
+            setIncomingError('Please enter a valid quantity');
+            return;
+        }
+
+        const product = products.find(p => p.sku === incomingForm.sku);
+        if (!product) {
+            setIncomingError('Product not found');
+            return;
+        }
+
+        const quantity = parseInt(incomingForm.quantity);
+        setProducts((prev) => prev.map(p => 
+            p.sku === incomingForm.sku 
+                ? { ...p, stock: p.stock + quantity }
+                : p
+        ));
+
+        addToast(`Added ${quantity} units of ${product.name} to inventory.`, 'success');
+        setShowAddIncoming(false);
+        setIncomingForm({ sku: '', quantity: '' });
+    };
+
     return (
         <div className="inventory-dashboard">
             <div className="page-header">
@@ -53,9 +92,15 @@ const InventoryDashboard = () => {
                     <h1 className="page-title">Inventory Management</h1>
                     <p className="page-subtitle">Monitor stock levels and manage inventory</p>
                 </div>
-                <Button variant="success" onClick={handleSyncInventory} loading={syncing}>
-                    Sync Inventory
-                </Button>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                    <Button variant="primary" onClick={() => setShowAddIncoming(true)}>
+                        <Plus size={18} style={{ marginRight: '6px' }} />
+                        Add Incoming Products
+                    </Button>
+                    <Button variant="success" onClick={handleSyncInventory} loading={syncing}>
+                        Sync Inventory
+                    </Button>
+                </div>
             </div>
 
             {lastSyncedAt && (
@@ -147,6 +192,79 @@ const InventoryDashboard = () => {
                     </table>
                 </div>
             </Card>
+
+            <Modal
+                isOpen={showAddIncoming}
+                onClose={() => {
+                    setShowAddIncoming(false);
+                    setIncomingError('');
+                }}
+                title="Add Incoming Products"
+            >
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {incomingError && (
+                        <div style={{
+                            backgroundColor: '#fee2e2',
+                            color: '#991b1b',
+                            padding: '12px',
+                            borderRadius: '4px',
+                            fontSize: '14px'
+                        }}>
+                            {incomingError}
+                        </div>
+                    )}
+
+                    <div>
+                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
+                            Select Product
+                        </label>
+                        <select
+                            value={incomingForm.sku}
+                            onChange={(e) => setIncomingForm(prev => ({ ...prev, sku: e.target.value }))}
+                            style={{
+                                width: '100%',
+                                padding: '10px',
+                                border: '1px solid #ddd',
+                                borderRadius: '4px',
+                                fontSize: '14px',
+                                fontFamily: 'inherit'
+                            }}
+                        >
+                            <option value="">-- Select a Product --</option>
+                            {products.map(p => (
+                                <option key={p.sku} value={p.sku}>
+                                    {p.name} ({p.sku})
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <Input
+                        label="Quantity to Add"
+                        type="number"
+                        name="quantity"
+                        value={incomingForm.quantity}
+                        onChange={(e) => setIncomingForm(prev => ({ ...prev, quantity: e.target.value }))}
+                        placeholder="Enter quantity"
+                        min="1"
+                    />
+
+                    <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '12px' }}>
+                        <Button
+                            variant="ghost"
+                            onClick={() => {
+                                setShowAddIncoming(false);
+                                setIncomingError('');
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button variant="success" onClick={handleAddIncoming}>
+                            Add to Inventory
+                        </Button>
+                    </div>
+                </div>
+            </Modal>
 
             <ToastContainer toasts={toasts} removeToast={removeToast} />
         </div>
