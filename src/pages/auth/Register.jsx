@@ -14,7 +14,9 @@ const Register = () => {
         name: '',
         email: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        role: 'staff',
+        adminSignupKey: ''
     });
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -48,6 +50,10 @@ const Register = () => {
             newErrors.confirmPassword = 'Passwords do not match';
         }
 
+        if (formData.role === 'admin' && !formData.adminSignupKey.trim()) {
+            newErrors.adminSignupKey = 'Admin signup key is required for admin account';
+        }
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -64,7 +70,8 @@ const Register = () => {
                 name: formData.name,
                 email: formData.email,
                 password: formData.password,
-                role: 'staff'
+                role: formData.role,
+                adminSignupKey: formData.adminSignupKey
             });
 
             if (result.success) {
@@ -149,6 +156,35 @@ const Register = () => {
                         }
                         required
                     />
+
+                    <div className="input-group">
+                        <label className="input-label">Account Type</label>
+                        <select
+                            className="filter-select"
+                            name="role"
+                            value={formData.role}
+                            onChange={handleChange}
+                            style={{ width: '100%' }}
+                        >
+                            <option value="staff">Staff</option>
+                            <option value="supervisor">Supervisor</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+
+                    {formData.role === 'admin' && (
+                        <Input
+                            label="Admin Signup Key"
+                            type="password"
+                            name="adminSignupKey"
+                            value={formData.adminSignupKey}
+                            onChange={handleChange}
+                            placeholder="Enter admin signup key"
+                            error={errors.adminSignupKey}
+                            icon={<Lock size={18} />}
+                            required
+                        />
+                    )}
 
                     <Input
                         label="Confirm Password"
