@@ -11,8 +11,8 @@ const MOCK_USER = {
 
 const MOCK_TOKEN = 'mock_jwt_token_12345';
 
-// Use mock data flag (set to false when backend is ready)
-const USE_MOCK_DATA = true;
+// Use mock data flag (set to false to use the backend at http://localhost:5000/api)
+const USE_MOCK_DATA = false;
 
 // Authentication Service
 const authService = {

@@ -1,6 +1,4 @@
-// Application Constants
 
-// API Base URL
 export const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 // Order Status
@@ -129,7 +127,7 @@ export const PRIORITY_COLORS = {
 
 // Polling Intervals (in milliseconds)
 export const POLLING_INTERVALS = {
-  TRACKING: 5000, // 5 seconds
-  INVENTORY: 30000, // 30 seconds
-  ORDERS: 10000 // 10 seconds
+  TRACKING: 5000,
+  INVENTORY: 30000,
+  ORDERS: 10000 
 };
