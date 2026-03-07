@@ -1,0 +1,176 @@
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import authService from '../services/authService';
+import { STORAGE_KEYS } from '../utils/constants';
+
+// Create Auth Context
+const AuthContext = createContext(null);
+
+// Auth Provider Component
+export const AuthProvider = ({ children }) => {
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    // Initialize auth state from localStorage
+    useEffect(() => {
+        const initAuth = async () => {
+            const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
+            const userData = localStorage.getItem(STORAGE_KEYS.USER_DATA);
+
+            if (token && userData) {
+                try {
+                    setUser(JSON.parse(userData));
+                    setIsAuthenticated(true);
+                } catch (error) {
+                    console.error('Error parsing user data:', error);
+                    logout();
+                }
+            }
+            setLoading(false);
+        };
+
+        initAuth();
+    }, []);
+
+    // Login function
+    const login = async (email, password) => {
+        try {
+            const response = await authService.login(email, password);
+            const { token, user: userData } = response.data.data;
+
+            // Store token and user data
+            localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, token);
+            localStorage.setItem(STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
+
+            setUser(userData);
+            setIsAuthenticated(true);
+
+            return { success: true };
+        } catch (error) {
+            console.error('Login error:', error);
+            return {
+                success: false,
+                error: error.message || 'Login failed. Please try again.'
+            };
+        }
+    };
+
+    // Register function
+    const register = async (userData) => {
+        try {
+            const response = await authService.register(userData);
+            return { success: true, data: response.data.data };
+        } catch (error) {
+            console.error('Registration error:', error);
+            return {
+                success: false,
+                error: error.message || 'Registration failed. Please try again.'
+            };
+        }
+    };
+
+    // Logout function
+    const logout = async () => {
+        try {
+            await authService.logout();
+        } catch (error) {
+            console.error('Logout error:', error);
+        } finally {
+            // Clear local storage
+            localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
+            localStorage.removeItem(STORAGE_KEYS.USER_DATA);
+
+            setUser(null);
+            setIsAuthenticated(false);
+        }
+    };
+
+    // Update user data
+    const updateUser = (updatedData) => {
+        const updatedUser = { ...user, ...updatedData };
+        setUser(updatedUser);
+        localStorage.setItem(STORAGE_KEYS.USER_DATA, JSON.stringify(updatedUser));
+    };
+
+    // Check if user has specific role
+    const hasRole = (role) => {
+        if (!user) return false;
+        if (Array.isArray(role)) {
+            return role.includes(user.role);
+        }
+        return user.role === role;
+    };
+
+    // Check if user is admin
+    const isAdmin = () => hasRole('admin');
+
+    // Check if user is supervisor or admin
+    const isSupervisorOrAdmin = () => hasRole(['supervisor', 'admin']);
+
+    const value = {
+        user,
+        loading,
+        isAuthenticated,
+        login,
+        register,
+        logout,
+        updateUser,
+        hasRole,
+        isAdmin,
+        isSupervisorOrAdmin
+    };
+
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
+
+// Custom hook to use auth context
+export const useAuth = () => {
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error('useAuth must be used within an AuthProvider');
+    }
+    return context;
+};
+
+// Protected Route Component
+export const ProtectedRoute = ({ children, roles }) => {
+    const { isAuthenticated, hasRole, loading } = useAuth();
+
+    if (loading) {
+        return (
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh'
+            }}>
+                <div>Loading...</div>
+            </div>
+        );
+    }
+
+    if (!isAuthenticated) {
+        window.location.href = '/login';
+        return null;
+    }
+
+    if (roles && !hasRole(roles)) {
+        return (
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
+                flexDirection: 'column',
+                gap: '1rem'
+            }}>
+                <h1>Access Denied</h1>
+                <p>You don't have permission to access this page.</p>
+            </div>
+        );
+    }
+
+    return children;
+};
+
+export default AuthContext;

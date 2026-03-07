@@ -1,0 +1,118 @@
+/* Badge Component Styles */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-weight: var(--font-medium);
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+    user-select: none;
+}
+
+/* Sizes */
+.badge-sm {
+    padding: 2px 8px;
+    font-size: var(--font-xs);
+}
+
+.badge-md {
+    padding: 4px 12px;
+    font-size: var(--font-sm);
+}
+
+.badge-lg {
+    padding: 6px 16px;
+    font-size: var(--font-base);
+}
+
+/* Variants */
+.badge-default {
+    background: var(--color-gray-100);
+    color: var(--text-primary);
+}
+
+.badge-primary {
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--color-primary);
+}
+
+.badge-success {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--color-success-dark);
+}
+
+.badge-warning {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--color-warning-dark);
+}
+
+.badge-danger {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--color-danger-dark);
+}
+
+.badge-info {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--color-info-dark);
+}
+
+.badge-purple {
+    background: rgba(124, 58, 237, 0.1);
+    color: var(--color-secondary-dark);
+}
+
+.badge-pink {
+    background: rgba(236, 72, 153, 0.1);
+    color: #be185d;
+}
+
+.badge-orange {
+    background: rgba(249, 115, 22, 0.1);
+    color: #c2410c;
+}
+
+/* Solid Variants */
+.badge-solid-primary {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: var(--color-white);
+}
+
+.badge-solid-success {
+    background: linear-gradient(135deg, var(--color-success) 0%, var(--color-success-dark) 100%);
+    color: var(--color-white);
+}
+
+.badge-solid-warning {
+    background: linear-gradient(135deg, var(--color-warning) 0%, var(--color-warning-dark) 100%);
+    color: var(--color-white);
+}
+
+.badge-solid-danger {
+    background: linear-gradient(135deg, var(--color-danger) 0%, var(--color-danger-dark) 100%);
+    color: var(--color-white);
+}
+
+/* Dot Indicator */
+.badge-dot {
+    padding-left: 6px;
+}
+
+.badge-dot-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}

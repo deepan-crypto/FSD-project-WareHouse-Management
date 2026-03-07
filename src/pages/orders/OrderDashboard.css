@@ -1,0 +1,128 @@
+/* Order Dashboard and Shared Page Styles */
+.page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-xl);
+    gap: var(--spacing-lg);
+}
+
+.page-title {
+    font-size: var(--font-3xl);
+    font-weight: var(--font-bold);
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-xs) 0;
+}
+
+.page-subtitle {
+    font-size: var(--font-base);
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.filter-card {
+    margin-bottom: var(--spacing-xl);
+}
+
+.filter-container {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.search-wrapper {
+    flex: 1;
+    min-width: 300px;
+}
+
+.filter-controls {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.filter-select {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    font-size: var(--font-sm);
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    cursor: pointer;
+    outline: none;
+    transition: all var(--transition-base);
+}
+
+.filter-select:hover {
+    border-color: var(--border-medium);
+}
+
+.filter-select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Data Table */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table thead {
+    background: var(--color-gray-50);
+}
+
+.data-table th {
+    text-align: left;
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--font-sm);
+    font-weight: var(--font-semibold);
+    color: var(--text-secondary);
+    border-bottom: 2px solid var(--border-light);
+}
+
+.data-table td {
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--font-sm);
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-light);
+}
+
+.data-table tbody tr {
+    transition: background var(--transition-fast);
+}
+
+.data-table tbody tr:hover {
+    background: var(--color-gray-50);
+}
+
+.order-value {
+    font-weight: var(--font-semibold);
+    color: var(--color-success);
+}
+
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+    }
+
+    .filter-container {
+        flex-direction: column;
+    }
+
+    .search-wrapper {
+        min-width: 100%;
+    }
+
+    .filter-controls {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .filter-select {
+        width: 100%;
+    }
+
+    .table-responsive {
+        overflow-x: scroll;
+    }
+}

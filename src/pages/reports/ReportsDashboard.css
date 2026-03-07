@@ -1,0 +1,17 @@
+/* Reports Dashboard Styles */
+.reports-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+}
+
+.chart-card {
+    min-height: 400px;
+}
+
+@media (max-width: 968px) {
+    .reports-grid {
+        grid-template-columns: 1fr;
+    }
+}

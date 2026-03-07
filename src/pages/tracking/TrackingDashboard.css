@@ -1,0 +1,95 @@
+/* Tracking Dashboard Styles */
+.tracking-board {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+    overflow-x: auto;
+    padding-bottom: var(--spacing-md);
+}
+
+.tracking-column {
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.tracking-column-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.tracking-column-title {
+    text-transform: capitalize;
+    font-weight: var(--font-semibold);
+}
+
+.tracking-column-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding-top: var(--spacing-sm);
+}
+
+.tracking-order-card {
+    padding: var(--spacing-md);
+    background: var(--color-gray-50);
+    border-radius: var(--radius-lg);
+    border-left: 3px solid var(--color-primary);
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.tracking-order-card:hover {
+    background: var(--bg-primary);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.tracking-order-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-sm);
+}
+
+.tracking-order-id {
+    font-family: 'Courier New', monospace;
+    font-weight: var(--font-semibold);
+    color: var(--color-primary);
+    font-size: var(--font-sm);
+}
+
+.tracking-order-customer {
+    font-size: var(--font-sm);
+    font-weight: var(--font-medium);
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-xs) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.tracking-order-info {
+    font-size: var(--font-xs);
+    color: var(--text-secondary);
+    margin: 0 0 4px 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.tracking-empty {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--text-tertiary);
+    font-size: var(--font-sm);
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .tracking-board {
+        grid-template-columns: 1fr;
+    }
+}

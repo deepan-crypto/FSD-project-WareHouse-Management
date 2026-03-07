@@ -1,0 +1,28 @@
+/* Main Layout Styles */
+.main-layout {
+    min-height: 100vh;
+    background: var(--bg-secondary);
+}
+
+.main-layout-container {
+    display: flex;
+    min-height: calc(100vh - 64px);
+}
+
+.main-content {
+    flex: 1;
+    overflow-x: hidden;
+    min-height: calc(100vh - 64px);
+}
+
+.main-content-inner {
+    padding: var(--spacing-xl);
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .main-content-inner {
+        padding: var(--spacing-md);
+    }
+}
