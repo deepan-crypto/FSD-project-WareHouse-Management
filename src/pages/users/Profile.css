@@ -1,0 +1,22 @@
+.profile-page {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.profile-card,
+.settings-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-light);
+    padding: 16px;
+    border-radius: 8px;
+    max-width: 640px;
+}
+
+.admin-section {
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    background: linear-gradient(90deg, rgba(249,250,251,1) 0%, rgba(255,255,255,1) 100%);
+    border: 1px solid var(--border-light);
+}

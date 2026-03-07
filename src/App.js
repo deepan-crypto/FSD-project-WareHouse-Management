@@ -15,6 +15,8 @@ import InventoryDashboard from './pages/inventory/InventoryDashboard';
 import TrackingDashboard from './pages/tracking/TrackingDashboard';
 import ReportsDashboard from './pages/reports/ReportsDashboard';
 import UserManagement from './pages/users/UserManagement';
+import Profile from './pages/users/Profile';
+import Settings from './pages/users/Settings';
 
 // Styles
 import './styles/variables.css';
@@ -40,6 +42,8 @@ function App() {
                     <Route path="/inventory" element={<InventoryDashboard />} />
                     <Route path="/tracking" element={<TrackingDashboard />} />
                     <Route path="/reports" element={<ReportsDashboard />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/settings" element={<Settings />} />
                     <Route
                       path="/users"
                       element={

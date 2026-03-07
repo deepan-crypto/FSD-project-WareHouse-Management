@@ -72,7 +72,6 @@
     align-items: center;
     justify-content: center;
     color: var(--text-secondary);
-    pointer-events: none;
 }
 
 .input-icon-left {
@@ -81,6 +80,8 @@
 
 .input-icon-right {
     right: 12px;
+    pointer-events: auto;
+    cursor: pointer;
 }
 
 .input-icon-left svg,
