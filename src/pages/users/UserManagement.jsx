@@ -9,7 +9,7 @@ import '../orders/OrderDashboard.css';
 
 const UserManagement = () => {
     const [showAddUserModal, setShowAddUserModal] = useState(false);
-    const [newUser, setNewUser] = useState({ name: '', email: '', role: 'staff' });
+    const [newUser, setNewUser] = useState({ name: '', email: '', password: '', role: 'staff' });
 
     const users = [
         { id: 1, name: 'John Doe', email: 'john.doe@warehouse.com', role: 'staff', isActive: true, ordersCompleted: 145 },
@@ -29,9 +29,12 @@ const UserManagement = () => {
     };
 
     const handleAddUser = () => {
+        if (!newUser.name || !newUser.email || !newUser.password) {
+            return;
+        }
         console.log('Adding user:', newUser);
         setShowAddUserModal(false);
-        setNewUser({ name: '', email: '', role: 'staff' });
+        setNewUser({ name: '', email: '', password: '', role: 'staff' });
     };
 
     return (
@@ -119,6 +122,14 @@ const UserManagement = () => {
                         value={newUser.email}
                         onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
                         placeholder="Enter email address"
+                        required
+                    />
+                    <Input
+                        label="Password"
+                        type="password"
+                        value={newUser.password}
+                        onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                        placeholder="Enter temporary password"
                         required
                     />
                     <div className="input-group">
