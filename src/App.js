@@ -7,6 +7,7 @@ import MainLayout from './components/layout/MainLayout';
 
 // Auth Pages
 import Login from './pages/auth/Login';
+import Register from './pages/auth/Register';
 
 // Protected Pages
 import Dashboard from './pages/dashboard/Dashboard';
@@ -29,6 +30,7 @@ function App() {
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
           {/* Protected Routes */}
           <Route

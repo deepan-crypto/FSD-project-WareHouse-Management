@@ -1,23 +1,50 @@
-import React, { useState } from 'react';
-import { Plus, Search } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Plus } from 'lucide-react';
 import Card from '../../components/common/Card';
 import Badge from '../../components/common/Badge';
 import Button from '../../components/common/Button';
 import Modal from '../../components/common/Modal';
 import Input from '../../components/common/Input';
+import { ToastContainer } from '../../components/common/Toast';
+import api from '../../services/api';
 import '../orders/OrderDashboard.css';
 
 const UserManagement = () => {
     const [showAddUserModal, setShowAddUserModal] = useState(false);
     const [newUser, setNewUser] = useState({ name: '', email: '', password: '', role: 'staff' });
+    const [users, setUsers] = useState([]);
+    const [loadingUsers, setLoadingUsers] = useState(false);
+    const [saving, setSaving] = useState(false);
+    const [toasts, setToasts] = useState([]);
 
-    const users = [
-        { id: 1, name: 'John Doe', email: 'john.doe@warehouse.com', role: 'staff', isActive: true, ordersCompleted: 145 },
-        { id: 2, name: 'Jane Smith', email: 'jane.smith@warehouse.com', role: 'supervisor', isActive: true, ordersCompleted: 132 },
-        { id: 3, name: 'Mike Johnson', email: 'mike.j@warehouse.com', role: 'staff', isActive: true, ordersCompleted: 128 },
-        { id: 4, name: 'Sarah Lee', email: 'sarah.lee@warehouse.com', role: 'admin', isActive: true, ordersCompleted: 118 },
-        { id: 5, name: 'Tom Brown', email: 'tom.brown@warehouse.com', role: 'staff', isActive: false, ordersCompleted: 95 },
-    ];
+    const addToast = (message, type = 'info') => {
+        const id = Date.now() + Math.random();
+        setToasts((prev) => [...prev, { id, message, type }]);
+    };
+
+    const removeToast = (id) => {
+        setToasts((prev) => prev.filter((toast) => toast.id !== id));
+    };
+
+    const fetchUsers = async () => {
+        setLoadingUsers(true);
+        try {
+            const response = await api.get('/users');
+            const normalized = (response.data?.data || []).map((user) => ({
+                ...user,
+                ordersCompleted: user.ordersCompleted ?? 0
+            }));
+            setUsers(normalized);
+        } catch (error) {
+            addToast(error.message || 'Failed to load users', 'error');
+        } finally {
+            setLoadingUsers(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchUsers();
+    }, []);
 
     const getRoleBadgeVariant = (role) => {
         const variants = {
@@ -28,13 +55,25 @@ const UserManagement = () => {
         return variants[role] || 'default';
     };
 
-    const handleAddUser = () => {
+    const handleAddUser = async () => {
         if (!newUser.name || !newUser.email || !newUser.password) {
+            addToast('Name, email and password are required.', 'warning');
             return;
         }
-        console.log('Adding user:', newUser);
-        setShowAddUserModal(false);
-        setNewUser({ name: '', email: '', password: '', role: 'staff' });
+
+        setSaving(true);
+        try {
+            const response = await api.post('/users', newUser);
+            const created = response.data?.data;
+            setUsers((prev) => [{ ...created, ordersCompleted: 0 }, ...prev]);
+            setShowAddUserModal(false);
+            setNewUser({ name: '', email: '', password: '', role: 'staff' });
+            addToast('User created successfully.', 'success');
+        } catch (error) {
+            addToast(error.message || 'Failed to create user', 'error');
+        } finally {
+            setSaving(false);
+        }
     };
 
     return (
@@ -88,6 +127,11 @@ const UserManagement = () => {
                                     </td>
                                 </tr>
                             ))}
+                            {!loadingUsers && users.length === 0 && (
+                                <tr>
+                                    <td colSpan={6}>No users found.</td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>
@@ -102,7 +146,7 @@ const UserManagement = () => {
                         <Button variant="secondary" onClick={() => setShowAddUserModal(false)}>
                             Cancel
                         </Button>
-                        <Button variant="primary" onClick={handleAddUser}>
+                        <Button variant="primary" onClick={handleAddUser} loading={saving}>
                             Add User
                         </Button>
                     </>
@@ -147,6 +191,8 @@ const UserManagement = () => {
                     </div>
                 </div>
             </Modal>
+
+            <ToastContainer toasts={toasts} removeToast={removeToast} />
         </div>
     );
 };
