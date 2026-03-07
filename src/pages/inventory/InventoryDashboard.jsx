@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Package, TrendingDown, AlertCircle, Plus, X } from 'lucide-react';
+import { Package, TrendingDown, AlertCircle, Plus } from 'lucide-react';
 import Card from '../../components/common/Card';
 import Badge from '../../components/common/Badge';
 import Button from '../../components/common/Button';
