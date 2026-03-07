@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Card from '../../components/common/Card';
 import Badge from '../../components/common/Badge';
 import Button from '../../components/common/Button';
+import { ToastContainer } from '../../components/common/Toast';
 import { Download } from 'lucide-react';
 import '../orders/OrderDashboard.css';
 import './ReportsDashboard.css';
 
 const ReportsDashboard = () => {
+    const [toasts, setToasts] = useState([]);
+
+    const addToast = (message, type = 'info') => {
+        const id = Date.now() + Math.random();
+        setToasts((prev) => [...prev, { id, message, type }]);
+    };
+
+    const removeToast = (id) => {
+        setToasts((prev) => prev.filter((toast) => toast.id !== id));
+    };
+
     const productivityData = [
         { name: 'John Doe', orders: 145, accuracy: 98.5 },
         { name: 'Jane Smith', orders: 132, accuracy: 97.2 },
@@ -35,6 +47,31 @@ const ReportsDashboard = () => {
 
     const COLORS = ['#f59e0b', '#3b82f6', '#10b981', '#ef4444'];
 
+    const handleExportReports = () => {
+        const headers = ['Staff Member', 'Orders Completed', 'Accuracy Rate'];
+        const rows = productivityData.map((staff) => [
+            staff.name,
+            staff.orders,
+            `${staff.accuracy}%`
+        ]);
+
+        const csv = [headers, ...rows]
+            .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+            .join('\n');
+
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `warehouse-report-${new Date().toISOString().slice(0, 10)}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+
+        addToast('Report exported as CSV.', 'success');
+    };
+
     return (
         <div className="reports-dashboard">
             <div className="page-header">
@@ -42,7 +79,7 @@ const ReportsDashboard = () => {
                     <h1 className="page-title">Reports & Analytics</h1>
                     <p className="page-subtitle">Performance insights and metrics</p>
                 </div>
-                <Button variant="primary" leftIcon={<Download size={18} />}>
+                <Button variant="primary" leftIcon={<Download size={18} />} onClick={handleExportReports}>
                     Export Reports
                 </Button>
             </div>
@@ -145,6 +182,8 @@ const ReportsDashboard = () => {
                     </table>
                 </div>
             </Card>
+
+            <ToastContainer toasts={toasts} removeToast={removeToast} />
         </div>
     );
 };
