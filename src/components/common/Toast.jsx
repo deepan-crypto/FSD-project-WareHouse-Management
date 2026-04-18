@@ -11,6 +11,13 @@ const Toast = ({
 }) => {
     const [isVisible, setIsVisible] = useState(true);
 
+    const handleClose = () => {
+        setIsVisible(false);
+        setTimeout(() => {
+            onClose?.();
+        }, 300);
+    };
+
     useEffect(() => {
         if (duration > 0) {
             const timer = setTimeout(() => {
@@ -19,14 +26,7 @@ const Toast = ({
 
             return () => clearTimeout(timer);
         }
-    }, [duration]);
-
-    const handleClose = () => {
-        setIsVisible(false);
-        setTimeout(() => {
-            onClose?.();
-        }, 300);
-    };
+    }, [duration, handleClose, onClose]);
 
     const icons = {
         success: <CheckCircle size={20} />,

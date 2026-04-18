@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { Package, TrendingUp, AlertCircle, Users, Clock, CheckCircle } from 'lucide-react';
 import Card from '../../components/common/Card';
 import Badge from '../../components/common/Badge';
-import { formatNumber } from '../../utils/formatters';
 import './Dashboard.css';
 
 const Dashboard = () => {

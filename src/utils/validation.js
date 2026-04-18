@@ -82,7 +82,7 @@ export const validatePhone = (phone) => {
     if (!phone) {
         return 'Phone number is required';
     }
-    const phoneRegex = /^[\d\s\-\(\)]+$/;
+    const phoneRegex = /^[\d\s\-()]+$/;
     if (!phoneRegex.test(phone)) {
         return 'Please enter a valid phone number';
     }

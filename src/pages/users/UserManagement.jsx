@@ -26,23 +26,23 @@ const UserManagement = () => {
         setToasts((prev) => prev.filter((toast) => toast.id !== id));
     };
 
-    const fetchUsers = async () => {
-        setLoadingUsers(true);
-        try {
-            const response = await api.get('/users');
-            const normalized = (response.data?.data || []).map((user) => ({
-                ...user,
-                ordersCompleted: user.ordersCompleted ?? 0
-            }));
-            setUsers(normalized);
-        } catch (error) {
-            addToast(error.message || 'Failed to load users', 'error');
-        } finally {
-            setLoadingUsers(false);
-        }
-    };
-
     useEffect(() => {
+        const fetchUsers = async () => {
+            setLoadingUsers(true);
+            try {
+                const response = await api.get('/users');
+                const normalized = (response.data?.data || []).map((user) => ({
+                    ...user,
+                    ordersCompleted: user.ordersCompleted ?? 0
+                }));
+                setUsers(normalized);
+            } catch (error) {
+                addToast(error.message || 'Failed to load users', 'error');
+            } finally {
+                setLoadingUsers(false);
+            }
+        };
+        
         fetchUsers();
     }, []);
 
