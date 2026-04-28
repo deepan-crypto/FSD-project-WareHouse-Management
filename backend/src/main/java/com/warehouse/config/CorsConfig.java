@@ -21,6 +21,8 @@ public class CorsConfig {
             "http://localhost:3000",
             "http://localhost:5173",
             "http://localhost:8080",
+            "https://fsd-project-ware-house-management.vercel.app",
+            "https://*.vercel.app",
             "https://*.onrender.com"
         ));
 
