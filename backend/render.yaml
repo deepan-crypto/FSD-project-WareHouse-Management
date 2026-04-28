@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: warehouse-backend
+    runtime: docker
+    plan: free
+    repo: https://github.com/YOUR_USERNAME/YOUR_REPO  # Update with your GitHub repo
+    rootDir: backend
+    dockerfilePath: Dockerfile
+    region: oregon
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: DB_URL
+        value: jdbc:postgresql://dpg-d7oduh7lk1mc73f25vig-a.oregon-postgres.render.com:5432/cloud_zxuz?sslmode=require
+      - key: DB_USERNAME
+        fromDatabase:
+          name: warehouse-db
+          property: username
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: warehouse-db
+          property: password
+      - key: JWT_SECRET
+        sync: false  # Set to false, manually add a secure JWT secret
+
+databases:
+  - name: warehouse-db
+    databaseName: cloud_zxuz
+    user: cloud_zxuz_user
+    plan: free
+    region: oregon

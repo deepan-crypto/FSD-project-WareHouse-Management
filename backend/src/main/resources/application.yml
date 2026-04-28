@@ -11,15 +11,15 @@ spring:
 
   # ---- PostgreSQL DataSource ----
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/warehouse_db}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
+    url: ${DB_URL:jdbc:postgresql://dpg-d7oduh7lk1mc73f25vig-a.oregon-postgres.render.com:5432/cloud_zxuz?sslmode=require}
+    username: ${DB_USERNAME:cloud_zxuz_user}
+    password: ${DB_PASSWORD:GmNsVxNwJHm89UEnW5XripKWSxv8b32Y}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5
       idle-timeout: 300000
-      connection-timeout: 20000
+      connection-timeout: 30000
 
   # ---- JPA / Hibernate ----
   jpa:
