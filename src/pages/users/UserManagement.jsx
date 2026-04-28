@@ -30,10 +30,12 @@ const UserManagement = () => {
         const fetchUsers = async () => {
             setLoadingUsers(true);
             try {
-                const response = await api.get('/users');
-                const normalized = (response.data?.data || []).map((user) => ({
+                const response = await api.get('/admin/users');
+                const normalized = (response.data || []).map((user) => ({
                     ...user,
-                    ordersCompleted: user.ordersCompleted ?? 0
+                    ordersCompleted: user.ordersCompleted ?? 0,
+                    role: Array.isArray(user.roles) ? user.roles[0]?.replace(/^ROLE_/i, '').toLowerCase() : (user.role || 'staff'),
+                    isActive: user.isActive !== undefined ? user.isActive : true
                 }));
                 setUsers(normalized);
             } catch (error) {
@@ -63,9 +65,16 @@ const UserManagement = () => {
 
         setSaving(true);
         try {
-            const response = await api.post('/users', newUser);
-            const created = response.data?.data;
-            setUsers((prev) => [{ ...created, ordersCompleted: 0 }, ...prev]);
+            await api.post('/auth/register', newUser);
+            // Re-fetch user list after creating
+            const refreshResp = await api.get('/admin/users');
+            const normalized = (refreshResp.data || []).map((u) => ({
+                ...u,
+                ordersCompleted: u.ordersCompleted ?? 0,
+                role: Array.isArray(u.roles) ? u.roles[0]?.replace(/^ROLE_/i, '').toLowerCase() : (u.role || 'staff'),
+                isActive: u.isActive !== undefined ? u.isActive : true
+            }));
+            setUsers(normalized);
             setShowAddUserModal(false);
             setNewUser({ name: '', email: '', password: '', role: 'staff' });
             addToast('User created successfully.', 'success');
