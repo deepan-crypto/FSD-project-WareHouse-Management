@@ -11,6 +11,15 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+    // Helper: normalize the roles array from backend (e.g. ["ROLE_ADMIN"]) into
+    // a single lowercase role string the frontend expects (e.g. "admin").
+    const normalizeRole = (roles) => {
+        if (!roles || roles.length === 0) return 'staff';
+        // Backend sends roles like "ROLE_ADMIN" or "ROLE_STAFF"
+        const raw = roles[0]; // take the first role
+        return raw.replace(/^ROLE_/i, '').toLowerCase();
+    };
+
     // Initialize auth state from localStorage
     useEffect(() => {
         const initAuth = async () => {
@@ -30,13 +39,23 @@ export const AuthProvider = ({ children }) => {
         };
 
         initAuth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Login function
     const login = async (email, password) => {
         try {
             const response = await authService.login(email, password);
-            const { token, user: userData } = response.data.data;
+            // Backend returns JwtResponse directly: { token, type, id, name, email, roles }
+            const data = response.data;
+
+            const token = data.token;
+            const userData = {
+                id: data.id,
+                name: data.name,
+                email: data.email,
+                role: normalizeRole(data.roles),
+            };
 
             // Store token and user data
             localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, token);
@@ -58,8 +77,10 @@ export const AuthProvider = ({ children }) => {
     // Register function
     const register = async (userData) => {
         try {
+            // Backend returns MessageResponse directly: { message, success }
             const response = await authService.register(userData);
-            return { success: true, data: response.data.data };
+            const data = response.data;
+            return { success: data.success !== false, data };
         } catch (error) {
             console.error('Registration error:', error);
             return {
@@ -71,18 +92,12 @@ export const AuthProvider = ({ children }) => {
 
     // Logout function
     const logout = async () => {
-        try {
-            await authService.logout();
-        } catch (error) {
-            console.error('Logout error:', error);
-        } finally {
-            // Clear local storage
-            localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
-            localStorage.removeItem(STORAGE_KEYS.USER_DATA);
+        // Clear local storage (no backend logout endpoint)
+        localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
+        localStorage.removeItem(STORAGE_KEYS.USER_DATA);
 
-            setUser(null);
-            setIsAuthenticated(false);
-        }
+        setUser(null);
+        setIsAuthenticated(false);
     };
 
     // Update user data
