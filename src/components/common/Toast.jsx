@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { X, CheckCircle, AlertCircle, Info, AlertTriangle } from 'lucide-react';
 import './Toast.css';
 
@@ -11,12 +11,12 @@ const Toast = ({
 }) => {
     const [isVisible, setIsVisible] = useState(true);
 
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         setIsVisible(false);
         setTimeout(() => {
             onClose?.();
         }, 300);
-    };
+    }, [onClose]);
 
     useEffect(() => {
         if (duration > 0) {
@@ -26,7 +26,7 @@ const Toast = ({
 
             return () => clearTimeout(timer);
         }
-    }, [duration, handleClose, onClose]);
+    }, [duration, handleClose]);
 
     const icons = {
         success: <CheckCircle size={20} />,
