@@ -24,9 +24,6 @@ public class CorsConfig {
             "https://*.onrender.com"
         ));
 
-        // Allow all origins pattern (use in development)
-        config.setAllowedOriginPatterns(List.of("*"));
-
         // Allowed HTTP methods
         config.setAllowedMethods(Arrays.asList(
             "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"
